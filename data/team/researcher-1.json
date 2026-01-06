@@ -1,0 +1,14 @@
+{
+  "name": "[Researcher Name]",
+  "role": "Postdoctoral Researcher",
+  "bio": "[Research focus area]",
+  "photo": "",
+  "email": "email@institution.edu",
+  "office": "",
+  "interests": ["Machine Learning", "Infrastructure"],
+  "linkedin": "",
+  "scholar": "",
+  "website": "",
+  "category": "postdoc",
+  "order": 1
+}
