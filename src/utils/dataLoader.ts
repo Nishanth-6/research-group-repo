@@ -57,10 +57,16 @@ export interface AboutSettings {
   vision?: string;
 }
 
+// Helper to get correct base path
+const getBasePath = () => {
+  return import.meta.env.BASE_URL || '/';
+};
+
 // Load all projects
 export async function loadProjects(): Promise<Project[]> {
   try {
-    const response = await fetch('/data/projects-index.json');
+    const basePath = getBasePath();
+    const response = await fetch(`${basePath}data/projects-index.json`);
     if (!response.ok) {
       // Fallback: Try to load individual project files
       return await loadProjectsFromFiles();
@@ -84,10 +90,11 @@ async function loadProjectsFromFiles(): Promise<Project[]> {
   ];
 
   const projects: Project[] = [];
+  const basePath = getBasePath();
 
   for (const file of projectFiles) {
     try {
-      const response = await fetch(`/data/projects/${file}.json`);
+      const response = await fetch(`${basePath}data/projects/${file}.json`);
       if (response.ok) {
         const project = await response.json();
         projects.push(project);
@@ -103,7 +110,8 @@ async function loadProjectsFromFiles(): Promise<Project[]> {
 // Load all team members
 export async function loadTeamMembers(): Promise<TeamMember[]> {
   try {
-    const response = await fetch('/data/team-index.json');
+    const basePath = getBasePath();
+    const response = await fetch(`${basePath}data/team-index.json`);
     if (!response.ok) {
       return await loadTeamFromFiles();
     }
@@ -123,10 +131,11 @@ async function loadTeamFromFiles(): Promise<TeamMember[]> {
   ];
 
   const team: TeamMember[] = [];
+  const basePath = getBasePath();
 
   for (const file of teamFiles) {
     try {
-      const response = await fetch(`/data/team/${file}.json`);
+      const response = await fetch(`${basePath}data/team/${file}.json`);
       if (response.ok) {
         const member = await response.json();
         team.push(member);
@@ -142,7 +151,8 @@ async function loadTeamFromFiles(): Promise<TeamMember[]> {
 // Load all publications
 export async function loadPublications(): Promise<Publication[]> {
   try {
-    const response = await fetch('/data/publications-index.json');
+    const basePath = getBasePath();
+    const response = await fetch(`${basePath}data/publications-index.json`);
     if (!response.ok) {
       return await loadPublicationsFromFiles();
     }
@@ -161,10 +171,11 @@ async function loadPublicationsFromFiles(): Promise<Publication[]> {
   ];
 
   const publications: Publication[] = [];
+  const basePath = getBasePath();
 
   for (const file of pubFiles) {
     try {
-      const response = await fetch(`/data/publications/${file}.json`);
+      const response = await fetch(`${basePath}data/publications/${file}.json`);
       if (response.ok) {
         const pub = await response.json();
         publications.push(pub);
@@ -180,7 +191,8 @@ async function loadPublicationsFromFiles(): Promise<Publication[]> {
 // Load site settings
 export async function loadSiteSettings(): Promise<SiteSettings> {
   try {
-    const response = await fetch('/data/settings/general.json');
+    const basePath = getBasePath();
+    const response = await fetch(`${basePath}data/settings/general.json`);
     if (!response.ok) {
       return getDefaultSettings();
     }
@@ -204,7 +216,8 @@ function getDefaultSettings(): SiteSettings {
 // Load about settings
 export async function loadAboutSettings(): Promise<AboutSettings> {
   try {
-    const response = await fetch('/data/settings/about.json');
+    const basePath = getBasePath();
+    const response = await fetch(`${basePath}data/settings/about.json`);
     if (!response.ok) {
       return getDefaultAboutSettings();
     }

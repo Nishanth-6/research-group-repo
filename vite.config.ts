@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/research-group-repo/', // <--- ADD THIS LINE (Match your repo name)
+  base: process.env.NETLIFY ? '/' : '/research-group-repo/',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
