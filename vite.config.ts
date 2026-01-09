@@ -2,9 +2,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: process.env.NETLIFY ? '/' : '/research-group-repo/',
+  base: command === 'serve' ? '/' : '/research-group-repo/',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
@@ -57,4 +57,4 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
-});
+}));
