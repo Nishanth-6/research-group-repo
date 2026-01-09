@@ -57,9 +57,14 @@ export interface AboutSettings {
   vision?: string;
 }
 
+// Helper to get base path
+const getBase = () => {
+  const base = import.meta.env.BASE_URL || '/';
+  return base.endsWith('/') ? base : base + '/';
+};
+
 // Load all projects
 export async function loadProjects(): Promise<Project[]> {
-  // Skip index file, go straight to individual files
   return await loadProjectsFromFiles();
 }
 
@@ -74,10 +79,11 @@ async function loadProjectsFromFiles(): Promise<Project[]> {
   ];
 
   const projects: Project[] = [];
+  const base = getBase();
 
   for (const file of projectFiles) {
     try {
-      const response = await fetch(`/data/projects/${file}.json`);
+      const response = await fetch(`${base}data/projects/${file}.json`);
       if (response.ok) {
         const project = await response.json();
         projects.push(project);
@@ -103,10 +109,11 @@ async function loadTeamFromFiles(): Promise<TeamMember[]> {
   ];
 
   const team: TeamMember[] = [];
+  const base = getBase();
 
   for (const file of teamFiles) {
     try {
-      const response = await fetch(`/data/team/${file}.json`);
+      const response = await fetch(`${base}data/team/${file}.json`);
       if (response.ok) {
         const member = await response.json();
         team.push(member);
@@ -131,10 +138,11 @@ async function loadPublicationsFromFiles(): Promise<Publication[]> {
   ];
 
   const publications: Publication[] = [];
+  const base = getBase();
 
   for (const file of pubFiles) {
     try {
-      const response = await fetch(`/data/publications/${file}.json`);
+      const response = await fetch(`${base}data/publications/${file}.json`);
       if (response.ok) {
         const pub = await response.json();
         publications.push(pub);
@@ -150,7 +158,8 @@ async function loadPublicationsFromFiles(): Promise<Publication[]> {
 // Load site settings
 export async function loadSiteSettings(): Promise<SiteSettings> {
   try {
-    const response = await fetch(`/data/settings/general.json`);
+    const base = getBase();
+    const response = await fetch(`${base}data/settings/general.json`);
     if (!response.ok) {
       return getDefaultSettings();
     }
@@ -174,7 +183,8 @@ function getDefaultSettings(): SiteSettings {
 // Load about settings
 export async function loadAboutSettings(): Promise<AboutSettings> {
   try {
-    const response = await fetch(`/data/settings/about.json`);
+    const base = getBase();
+    const response = await fetch(`${base}data/settings/about.json`);
     if (!response.ok) {
       return getDefaultAboutSettings();
     }
