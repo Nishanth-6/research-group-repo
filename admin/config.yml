@@ -1,0 +1,135 @@
+backend:
+  name: github
+  repo: Nishanth-6/research-group-repo
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+# Local backend for development - comment out backend above and uncomment below for local testing
+# backend:
+#   name: git-gateway
+
+# Enable local development mode
+local_backend: true
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  # Projects Collection
+  - name: projects
+    label: Projects
+    folder: public/data/projects
+    create: true
+    slug: "{{slug}}"
+    extension: json
+    format: json
+    editor:
+      preview: false
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Image URL, name: image, widget: string, required: false }
+      - label: Categories
+        name: categories
+        widget: list
+        default: []
+      - label: Team Members
+        name: team
+        widget: list
+        default: []
+      - { label: Featured, name: featured, widget: boolean, required: false, default: false }
+      - label: Status
+        name: status
+        widget: select
+        options: ["active", "completed", "upcoming"]
+        required: false
+      - { label: Start Date, name: startDate, widget: string, required: false }
+      - { label: End Date, name: endDate, widget: string, required: false }
+      - { label: Project URL, name: url, widget: string, required: false }
+
+  # Team Members Collection
+  - name: team
+    label: Team Members
+    folder: public/data/team
+    create: true
+    slug: "{{slug}}"
+    extension: json
+    format: json
+    editor:
+      preview: false
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Role, name: role, widget: string }
+      - { label: Bio, name: bio, widget: text }
+      - { label: Photo URL, name: photo, widget: string, required: false }
+      - { label: Email, name: email, widget: string }
+      - { label: Office, name: office, widget: string, required: false }
+      - label: Research Interests
+        name: interests
+        widget: list
+        default: []
+      - { label: LinkedIn, name: linkedin, widget: string, required: false }
+      - { label: Google Scholar, name: scholar, widget: string, required: false }
+      - { label: Personal Website, name: website, widget: string, required: false }
+      - label: Category
+        name: category
+        widget: select
+        options: ["faculty", "postdoc", "phd", "masters", "undergrad", "alumni"]
+        required: false
+      - { label: Display Order, name: order, widget: number, required: false }
+
+  # Publications Collection
+  - name: publications
+    label: Publications
+    folder: public/data/publications
+    create: true
+    slug: "{{year}}-{{slug}}"
+    extension: json
+    format: json
+    editor:
+      preview: false
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Authors, name: authors, widget: string }
+      - { label: Year, name: year, widget: number }
+      - { label: Venue, name: venue, widget: string }
+      - { label: Abstract, name: abstract, widget: text, required: false }
+      - { label: Link, name: link, widget: string, required: false }
+      - { label: PDF URL, name: pdf, widget: string, required: false }
+      - label: Type
+        name: type
+        widget: select
+        options: ["journal", "conference", "workshop", "preprint"]
+      - { label: Status, name: status, widget: string, required: false }
+
+  # General Settings (Singleton)
+  - name: settings
+    label: Site Settings
+    files:
+      - label: General Settings
+        name: general
+        file: public/data/settings/general.json
+        format: json
+        editor:
+          preview: false
+        fields:
+          - { label: Site Title, name: siteTitle, widget: string }
+          - { label: Site Description, name: siteDescription, widget: text }
+          - { label: Hero Title, name: heroTitle, widget: string }
+          - { label: Hero Subtitle, name: heroSubtitle, widget: text }
+          - { label: Contact Email, name: contactEmail, widget: string }
+          - { label: Contact Phone, name: contactPhone, widget: string, required: false }
+          - { label: Address, name: address, widget: text, required: false }
+
+      - label: About Page
+        name: about
+        file: public/data/settings/about.json
+        format: json
+        editor:
+          preview: false
+        fields:
+          - { label: Page Title, name: title, widget: string }
+          - { label: Content, name: content, widget: markdown }
+          - { label: Mission Statement, name: mission, widget: text }
+          - { label: Vision Statement, name: vision, widget: text, required: false }
