@@ -2,14 +2,10 @@ backend:
   name: github
   repo: Nishanth-6/research-group-repo
   branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
+  base_url: https://research-grp.netlify.app
+  auth_endpoint: /auth
 
-# Local backend for development - comment out backend above and uncomment below for local testing
-# backend:
-#   name: git-gateway
-
-# Enable local development mode
+# Enable local development mode (works without GitHub auth on localhost)
 local_backend: true
 
 media_folder: public/images
