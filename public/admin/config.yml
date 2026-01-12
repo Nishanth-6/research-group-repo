@@ -1,4 +1,10 @@
-# Local-only backend - no authentication required
+# GitHub backend - use manual token authentication for production
+backend:
+  name: github
+  repo: Nishanth-6/research-group-repo
+  branch: main
+
+# Local backend still works for development
 local_backend: true
 
 media_folder: public/images
