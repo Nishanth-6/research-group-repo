@@ -30,15 +30,27 @@ exports.handler = async (event) => {
       }
     );
 
-    const { access_token, token_type } = response.data;
+    const { access_token } = response.data;
 
-    // Return token in the format expected by Sveltia CMS
+    // Redirect back to the CMS with the token
+    const script = `
+      <script>
+        (function() {
+          window.opener.postMessage(
+            'authorization:github:success:${JSON.stringify({ token: access_token, provider: 'github' })}',
+            window.location.origin
+          );
+          window.close();
+        })();
+      </script>
+    `;
+
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        token: access_token,
-        provider: 'github'
-      })
+      headers: {
+        'Content-Type': 'text/html'
+      },
+      body: script
     };
   } catch (error) {
     console.error('OAuth error:', error.response?.data || error.message);
