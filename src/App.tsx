@@ -8,7 +8,7 @@ import { Publications } from './components/Publications';
 import { Team } from './components/Team';
 import { About } from './components/About';
 import { Contact } from './components/Contact';
-import KeystaticAdmin from './components/KeystaticAdmin';
+import Admin from './components/Admin';
 
 type Page = 'research' | 'team' | 'publications' | 'about' | 'contact';
 
@@ -39,7 +39,7 @@ function MainSite() {
 export default function App() {
   return (
     <Routes>
-      <Route path="/keystatic/*" element={<KeystaticAdmin />} />
+      <Route path="/admin/*" element={<Admin />} />
       <Route path="*" element={<MainSite />} />
     </Routes>
   );
