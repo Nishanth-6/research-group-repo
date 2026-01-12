@@ -1,11 +1,4 @@
-backend:
-  name: github
-  repo: Nishanth-6/research-group-repo
-  branch: main
-  base_url: https://research-grp.netlify.app
-  auth_endpoint: /auth
-
-# Enable local development mode (works without GitHub auth on localhost)
+# Local-only backend - no authentication required
 local_backend: true
 
 media_folder: public/images
