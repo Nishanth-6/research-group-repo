@@ -1,36 +1,24 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
-import { ProjectGrid } from './components/ProjectGrid';
-import { FilterBar } from './components/FilterBar';
 import { Publications } from './components/Publications';
 import { Team } from './components/Team';
 import { About } from './components/About';
 import { Contact } from './components/Contact';
 import Admin from './components/Admin';
 
-type Page = 'research' | 'team' | 'publications' | 'about' | 'contact';
+type Page = 'about' | 'team' | 'publications' | 'contact';
 
 function MainSite() {
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [activePage, setActivePage] = useState<Page>('research');
+  const [activePage, setActivePage] = useState<Page>('about');
 
   return (
     <div className="min-h-screen bg-white">
       <Header activePage={activePage} onPageChange={setActivePage} />
 
-      {activePage === 'research' && (
-        <>
-          <Hero />
-          <FilterBar activeFilter={activeFilter} onFilterChange={setActiveFilter} />
-          <ProjectGrid activeFilter={activeFilter} />
-        </>
-      )}
-
-      {activePage === 'publications' && <Publications />}
-      {activePage === 'team' && <Team />}
       {activePage === 'about' && <About />}
+      {activePage === 'team' && <Team />}
+      {activePage === 'publications' && <Publications />}
       {activePage === 'contact' && <Contact />}
     </div>
   );

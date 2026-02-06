@@ -2,17 +2,23 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
 
-type Page = 'research' | 'team' | 'publications' | 'about' | 'contact';
+type Page = 'about' | 'team' | 'publications' | 'contact';
 
 type HeaderProps = {
   activePage: Page;
   onPageChange: (page: Page) => void;
 };
 
+const navItems: { key: Page; label: string }[] = [
+  { key: 'about', label: 'about' },
+  { key: 'team', label: 'team' },
+  { key: 'publications', label: 'publications' },
+  { key: 'contact', label: 'contact' },
+];
+
 export function Header({ activePage, onPageChange }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Prevent scrolling when menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -28,30 +34,31 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
 
   return (
     <header className="border-b border-gray-200 bg-white sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         
-        {/* LOGO SECTION (Visible on Navbar) */}
-        <div className="flex items-center gap-4">
+        {/* LOGO + STYLED NAME */}
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => onPageChange('about')}
+        >
           <Logo />
-          <div>
-            <h1 className="text-2xl tracking-tight font-semibold">IDIATER</h1>
-            <p className="text-xs text-gray-600 mt-1 max-w-2xl hidden sm:block">
-              Infrastructure &amp; Decision Intelligence for Accelerating Technology and Energy Resilience
-            </p>
-          </div>
+          <span style={{ fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1 }}>
+            <span style={{ color: '#1e3a5f' }}>IDIA</span>
+            <span style={{ color: '#4caf50' }}>TER</span>
+          </span>
         </div>
         
-        {/* DESKTOP NAV (Hidden on Mobile) */}
+        {/* DESKTOP NAV */}
         <nav className="hidden lg:flex items-center gap-8">
-          {['research', 'team', 'publications', 'about', 'contact'].map((page) => (
+          {navItems.map((item) => (
             <button 
-              key={page}
-              onClick={() => onPageChange(page as Page)}
+              key={item.key}
+              onClick={() => onPageChange(item.key)}
               className={`text-sm transition-colors capitalize ${
-                activePage === page ? 'text-black font-medium' : 'text-gray-700 hover:text-black'
+                activePage === item.key ? 'text-black font-medium' : 'text-gray-700 hover:text-black'
               }`}
             >
-              {page}
+              {item.label}
             </button>
           ))}
         </nav>
@@ -65,14 +72,12 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
         </button>
       </div>
 
-      {/* --- MOBILE FULL SCREEN MENU --- */}
+      {/* MOBILE FULL SCREEN MENU */}
       {isOpen && (
         <div 
           className="fixed inset-0 z-50 bg-white animate-slide-down overflow-y-auto"
           style={{ top: 0, left: 0, width: '100vw', height: '100vh' }}
         >
-          
-          {/* Menu Header (Only Close Button, No Text/Logo) */}
           <div className="flex items-center justify-end px-6 py-6 border-b border-gray-100">
             <button 
               onClick={() => setIsOpen(false)}
@@ -82,23 +87,22 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
             </button>
           </div>
 
-          {/* Vertical Links List */}
           <nav 
             className="p-8"
             style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
           >
-            {['research', 'team', 'publications', 'about', 'contact'].map((page) => (
+            {navItems.map((item) => (
               <button
-                key={page}
-                onClick={() => handleNavClick(page as Page)}
+                key={item.key}
+                onClick={() => handleNavClick(item.key)}
                 className={`text-left text-2xl font-medium capitalize transition-colors ${
-                  activePage === page 
+                  activePage === item.key
                     ? 'text-black' 
                     : 'text-gray-500 hover:text-black'
                 }`}
                 style={{ display: 'block', width: '100%' }}
               >
-                {page}
+                {item.label}
               </button>
             ))}
           </nav>
