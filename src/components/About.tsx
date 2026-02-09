@@ -8,6 +8,24 @@ interface ProjectWithId extends Project {
   id: number;
 }
 
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
+
+const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
+  const { ref, isVisible } = useScrollAnimation(0.1);
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 export function About() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [projects, setProjects] = useState<ProjectWithId[]>([]);
@@ -61,21 +79,25 @@ export function About() {
       title: 'Self-Adapting Approximations',
       description:
         'Solving large-scale Markov decision processes using algorithms that automate learning from data, underlying problem structure, and instance difficulty — improving accessibility for non-technical domain experts and resource-constrained organizations.',
+      image: '/images/focus-1.jpg',
     },
     {
       title: 'Energy Real Options',
       description:
         'Operations, valuation, and risk management of commodity and energy conversion assets including production, storage, and transport — with a focus on renewable energy integration and trading strategies.',
+      image: '/images/focus-2.jpg',
     },
     {
       title: 'Energy & Computing Nexus',
       description:
         'Exploring how energy demands intensified by computing growth (e.g., data centers) can be met, and how computing advances (e.g., LLMs) can accelerate the sustainable energy transformation.',
+      image: '/images/focus-3.jpg',
     },
     {
       title: 'Large-Scale Optimization',
       description:
         'Designing efficient first-order methods and preconditioning techniques for convex optimization in machine learning, fairness-constrained systems, and sequential decision-making under uncertainty.',
+      image: '/images/focus-4.jpg',
     },
   ];
 
@@ -194,7 +216,7 @@ export function About() {
               maxWidth: '750px',
             }}
           >
-            <span style={{ color: '#1e3a5f' }}>I</span>nfrastructure and{' '}
+            <span style={{ color: '#93c5fd' }}>I</span>nfrastructure and{' '}
             <span style={{ color: '#60a5fa' }}>D</span>ecision{' '}
             <span style={{ color: '#60a5fa' }}>I</span>ntelligence for{' '}
             <span style={{ color: '#4caf50' }}>A</span>ccelerating{' '}
@@ -294,12 +316,12 @@ export function About() {
             disruptions ranging from extreme weather events to market volatility.
           </p>
         </div>
-      </div>
+        </div>
 
       {/* ===== HIGHLIGHTS GRID ===== */}
       <div
         style={{
-          maxWidth: '1000px',
+          maxWidth: '1200px',
           margin: '0 auto',
           padding: '64px 48px 0',
         }}
@@ -307,44 +329,63 @@ export function About() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: '32px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '24px',
+            justifyContent: 'center',
           }}
         >
           {highlights.map((item) => (
             <div
               key={item.title}
               style={{
-                padding: '28px',
-                border: '1px solid #e5e7eb',
-                transition: 'border-color 0.2s',
+                padding: '32px 24px',
+                border: '1px solid #f3f4f6',
+                borderRadius: '16px',
+                backgroundColor: '#ffffff',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                height: '100%',
               }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLDivElement).style.borderColor =
-                  '#9ca3af')
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLDivElement).style.borderColor =
-                  '#e5e7eb')
-              }
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)';
+                (e.currentTarget as HTMLDivElement).style.borderColor = '#e5e7eb';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)';
+                (e.currentTarget as HTMLDivElement).style.borderColor = '#f3f4f6';
+              }}
             >
-              <item.icon
-                size={32}
-                style={{ color: '#111827', marginBottom: '16px' }}
-              />
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '12px',
+                  backgroundColor: '#f8fafc',
+                  color: '#1e3a5f',
+                  marginBottom: '20px',
+                }}
+              >
+                <item.icon size={24} strokeWidth={2} />
+              </div>
+              
               <h3
                 style={{
                   fontSize: '1.1rem',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   color: '#111827',
-                  marginBottom: '10px',
+                  marginBottom: '12px',
+                  lineHeight: 1.3,
                 }}
               >
                 {item.title}
               </h3>
               <p
                 style={{
-                  fontSize: '0.9rem',
+                  fontSize: '0.95rem',
                   lineHeight: 1.6,
                   color: '#6b7280',
                   margin: 0,
@@ -355,233 +396,303 @@ export function About() {
             </div>
           ))}
         </div>
-      </div>
+        </div>
 
-      {/* ===== RESEARCH FOCUS AREAS ===== */}
-      <div
-        style={{
-          maxWidth: '1000px',
-          margin: '0 auto',
-          padding: '80px 48px 0',
-        }}
-      >
-        <h2
-          style={{
-            fontSize: '2rem',
-            fontWeight: 700,
-            color: '#111827',
-            marginBottom: '32px',
-          }}
-        >
-          Research Focus Areas
-        </h2>
+      {/* ===== RESEARCH FOCUS AREAS — Photorealistic Cards ===== */}
+      <FadeInSection delay={0.2}>
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '0',
+            maxWidth: '1100px',
+            margin: '0 auto',
+            padding: '80px 48px 0',
           }}
         >
-          {researchAreas.map((area, i) => (
-            <div
-              key={i}
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <p
               style={{
-                padding: '28px 28px 28px 24px',
-                borderLeft: '3px solid #111827',
-                marginBottom: '24px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: '#6b7280',
+                margin: '0 0 10px 0',
               }}
             >
-              <h3
+              Our Research
+            </p>
+            <h2
+              style={{
+                fontSize: '2.25rem',
+                fontWeight: 700,
+                color: '#111827',
+                margin: 0,
+              }}
+            >
+              Research Focus Areas
+            </h2>
+          </div>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '24px',
+            }}
+          >
+            {researchAreas.map((area, i) => (
+              <div
+                key={i}
                 style={{
-                  fontSize: '1.1rem',
-                  fontWeight: 600,
-                  color: '#111827',
-                  marginBottom: '10px',
+                  position: 'relative',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  minHeight: '360px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  cursor: 'default',
+                  transition: 'transform 0.3s, box-shadow 0.3s',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                  filter: (i === 1 || i === 3) ? 'brightness(1.15) contrast(1.1)' : 'none', // Brighten Energy Real Options (1) & Large-Scale Optimization (3)
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)';
+                  (e.currentTarget as HTMLDivElement).style.boxShadow = '0 20px 60px rgba(0,0,0,0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+                  (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
                 }}
               >
-                {area.title}
-              </h3>
-              <p
-                style={{
-                  fontSize: '0.9rem',
-                  lineHeight: 1.7,
-                  color: '#6b7280',
-                  margin: 0,
-                }}
-              >
-                {area.description}
-              </p>
-            </div>
-          ))}
+                {/* Background image */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundImage: `url(${area.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                />
+
+                {/* Dark overlay for readability */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.9) 100%)',
+                  }}
+                />
+
+                {/* Text content */}
+                <div
+                  style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    padding: '32px',
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontSize: '1.5rem',
+                      fontWeight: 700,
+                      color: '#ffffff',
+                      marginBottom: '12px',
+                      lineHeight: 1.3,
+                      textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    {area.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: '0.95rem',
+                      lineHeight: 1.6,
+                      color: 'rgba(255,255,255,0.9)',
+                      margin: 0,
+                      textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    {area.description}
+            </p>
+          </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </FadeInSection>
 
       {/* ===== PROJECTS ===== */}
-      <div
-        style={{
-          maxWidth: '1100px',
-          margin: '0 auto',
-          padding: '80px 48px 0',
-        }}
-      >
-        <h2
-          style={{
-            fontSize: '2rem',
-            fontWeight: 700,
-            color: '#111827',
-            marginBottom: '24px',
-          }}
-        >
-          Research Projects
-        </h2>
-        <div id="research-projects" style={{ position: 'relative', top: '-100px' }} />
-        <FilterBar
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-        />
-        <div style={{ paddingTop: '32px' }}>
-          {loading ? (
-            <p style={{ color: '#9ca3af', textAlign: 'center', padding: '48px 0' }}>
-              Loading projects…
-            </p>
-          ) : filteredProjects.length === 0 ? (
-            <p style={{ color: '#9ca3af', textAlign: 'center', padding: '48px 0' }}>
-              No projects found in this category.
-            </p>
-          ) : (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: '32px',
-              }}
-            >
-              {filteredProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ===== COLLABORATIONS ===== */}
-      <div
-        style={{
-          maxWidth: '1000px',
-          margin: '0 auto',
-          padding: '80px 48px 0',
-        }}
-      >
-        <h2
-          style={{
-            fontSize: '2rem',
-            fontWeight: 700,
-            color: '#111827',
-            marginBottom: '16px',
-          }}
-        >
-          Collaborations &amp; Partnerships
-        </h2>
-        <p
-          style={{
-            fontSize: '1rem',
-            lineHeight: 1.7,
-            color: '#6b7280',
-            marginBottom: '28px',
-          }}
-        >
-          Our research is supported by leading funding agencies and conducted in
-          partnership with academic institutions, industry leaders, and
-          government organizations.
-        </p>
+      <FadeInSection delay={0.4}>
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-            gap: '16px',
+            maxWidth: '1100px',
+            margin: '0 auto',
+            padding: '80px 48px 0',
           }}
         >
+          <h2
+            style={{
+              fontSize: '2rem',
+              fontWeight: 700,
+              color: '#111827',
+              marginBottom: '24px',
+            }}
+          >
+            Research Projects
+          </h2>
+          <div id="research-projects" style={{ position: 'relative', top: '-100px' }} />
+          <FilterBar
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+          />
+          <div style={{ paddingTop: '32px' }}>
+            {loading ? (
+              <p style={{ color: '#9ca3af', textAlign: 'center', padding: '48px 0' }}>
+                Loading projects…
+              </p>
+            ) : filteredProjects.length === 0 ? (
+              <p style={{ color: '#9ca3af', textAlign: 'center', padding: '48px 0' }}>
+                No projects found in this category.
+              </p>
+            ) : (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                  gap: '32px',
+                }}
+              >
+                {filteredProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </FadeInSection>
+
+      {/* ===== COLLABORATIONS ===== */}
+      <FadeInSection delay={0.6}>
+        <div
+          style={{
+            maxWidth: '1000px',
+            margin: '0 auto',
+            padding: '80px 48px 0',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '2rem',
+              fontWeight: 700,
+              color: '#111827',
+              marginBottom: '16px',
+            }}
+          >
+            Collaborations &amp; Partnerships
+          </h2>
+          <p
+            style={{
+              fontSize: '1rem',
+              lineHeight: 1.7,
+              color: '#6b7280',
+              marginBottom: '28px',
+            }}
+          >
+            Our research is supported by leading funding agencies and conducted in
+            partnership with academic institutions, industry leaders, and
+            government organizations.
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+              gap: '16px',
+            }}
+          >
           {partners.map((partner) => (
-            <div
-              key={partner}
-              style={{
-                border: '1px solid #e5e7eb',
-                padding: '16px',
-                textAlign: 'center',
-                fontSize: '0.875rem',
-                color: '#4b5563',
-              }}
-            >
+              <div
+                key={partner}
+                style={{
+                  border: '1px solid #e5e7eb',
+                  padding: '16px',
+                  textAlign: 'center',
+                  fontSize: '0.875rem',
+                  color: '#4b5563',
+                }}
+              >
               {partner}
             </div>
           ))}
         </div>
-      </div>
+        </div>
+      </FadeInSection>
 
       {/* ===== CTA ===== */}
-      <div
-        style={{
-          maxWidth: '1000px',
-          margin: '0 auto',
-          padding: '80px 48px 80px',
-        }}
-      >
+      <FadeInSection delay={0.8}>
         <div
           style={{
-            textAlign: 'center',
-            borderTop: '1px solid #e5e7eb',
-            paddingTop: '60px',
+            maxWidth: '1000px',
+            margin: '0 auto',
+            padding: '80px 48px 80px',
           }}
         >
-          <h3
+          <div
             style={{
-              fontSize: '1.75rem',
-              fontWeight: 700,
-              color: '#111827',
-              marginBottom: '12px',
+              textAlign: 'center',
+              borderTop: '1px solid #e5e7eb',
+              paddingTop: '60px',
             }}
           >
-            Interested in Joining Us?
-          </h3>
-          <p
-            style={{
-              fontSize: '1rem',
-              color: '#6b7280',
-              maxWidth: '550px',
-              margin: '0 auto 28px',
-              lineHeight: 1.6,
-            }}
-          >
-            We're always looking for talented PhD students, postdocs, and
-            collaborators who share our passion for solving complex
-            infrastructure challenges through computational methods.
+            <h3
+              style={{
+                fontSize: '1.75rem',
+                fontWeight: 700,
+                color: '#111827',
+                marginBottom: '12px',
+              }}
+            >
+              Interested in Joining Us?
+            </h3>
+            <p
+              style={{
+                fontSize: '1rem',
+                color: '#6b7280',
+                maxWidth: '550px',
+                margin: '0 auto 28px',
+                lineHeight: 1.6,
+              }}
+            >
+              We're always looking for talented PhD students, postdocs, and
+              collaborators who share our passion for solving complex
+              infrastructure challenges through computational methods.
           </p>
-          <a
-            href="#"
-            onClick={(e) => e.preventDefault()}
-            style={{
-              display: 'inline-block',
-              padding: '14px 32px',
-              backgroundColor: '#111827',
-              color: '#fff',
-              fontSize: '0.95rem',
-              fontWeight: 500,
-              textDecoration: 'none',
-              transition: 'background-color 0.2s',
-            }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                '#374151')
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                '#111827')
-            }
+          <a 
+            href="#" 
+              onClick={(e) => e.preventDefault()}
+              style={{
+                display: 'inline-block',
+                padding: '14px 32px',
+                backgroundColor: '#111827',
+                color: '#fff',
+                fontSize: '0.95rem',
+                fontWeight: 500,
+                textDecoration: 'none',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.backgroundColor =
+                  '#374151')
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.backgroundColor =
+                  '#111827')
+              }
           >
             View Open Positions
           </a>
         </div>
       </div>
+      </FadeInSection>
     </div>
   );
 }

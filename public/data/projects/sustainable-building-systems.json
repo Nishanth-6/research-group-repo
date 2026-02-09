@@ -3,7 +3,7 @@
   "description": "IoT-enabled monitoring and optimization of energy usage in commercial and residential buildings.",
   "image": "https://images.unsplash.com/photo-1521708266372-b3547456cc2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMGJ1aWxkaW5nfGVufDF8fHx8MTc2NTQxMDExNHww&ixlib=rb-4.1.0&q=80&w=1080",
   "categories": ["sustainability", "energy", "infrastructure"],
-  "team": ["Dr. Nina Okonkwo", "Dr. Thomas Anderson"],
+  "team": ["Dr. Beryl Chen", "Dr. Ludwig Dierks"],
   "featured": false,
   "status": "active"
 }

@@ -3,7 +3,7 @@
   "description": "AI-powered decision support system for real-time power grid management and load balancing.",
   "image": "https://images.unsplash.com/photo-1662023027736-0cab9f911b2f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwb3dlciUyMGdyaWQlMjBlbGVjdHJpY2FsfGVufDF8fHx8MTc2NTMzMDcxNnww&ixlib=rb-4.1.0&q=80&w=1080",
   "categories": ["energy", "ai", "infrastructure"],
-  "team": ["Dr. Sarah Chen", "Dr. Marcus Williams"],
+  "team": ["Dr. Selva Nadarajah", "Arman Aminipanah"],
   "featured": true,
   "status": "active"
 }

@@ -10,10 +10,10 @@ type HeaderProps = {
 };
 
 const navItems: { key: Page; label: string }[] = [
-  { key: 'about', label: 'about' },
-  { key: 'team', label: 'team' },
-  { key: 'publications', label: 'publications' },
-  { key: 'contact', label: 'contact' },
+  { key: 'about', label: 'About' },
+  { key: 'team', label: 'Team' },
+  { key: 'publications', label: 'Publications' },
+  { key: 'contact', label: 'Contact' },
 ];
 
 export function Header({ activePage, onPageChange }: HeaderProps) {
@@ -33,30 +33,44 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
   };
 
   return (
-    <header className="border-b border-gray-200 bg-white sticky top-0 z-40">
+    <header className="border-b border-gray-200 bg-white sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        
-        {/* LOGO + STYLED NAME */}
+
+        {/* LOGO + WORDMARK */}
         <div
-          className="flex items-center gap-3 cursor-pointer"
+          className="flex items-center cursor-pointer"
           onClick={() => onPageChange('about')}
+          style={{ gap: '18px' }}
         >
           <Logo />
-          <span style={{ fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1 }}>
-            <span style={{ color: '#1e3a5f' }}>IDIA</span>
-            <span style={{ color: '#4caf50' }}>TER</span>
-          </span>
+          <img
+            src="/images/idiater-wordmark-new.png"
+            alt="IDIATER"
+            style={{
+              height: '70px',
+              width: 'auto',
+              display: 'block',
+              borderRadius: '10px'
+            }}
+          />
         </div>
         
         {/* DESKTOP NAV */}
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav 
+          className="hidden lg:flex items-center"
+          style={{ gap: '40px' }}
+        >
           {navItems.map((item) => (
-            <button 
+            <button
               key={item.key}
               onClick={() => onPageChange(item.key)}
-              className={`text-sm transition-colors capitalize ${
-                activePage === item.key ? 'text-black font-medium' : 'text-gray-700 hover:text-black'
-              }`}
+              className="text-lg font-semibold transition-colors capitalize"
+              style={{
+                color: activePage === item.key ? '#000' : '#4b5563',
+                borderBottom: activePage === item.key ? '2px solid #000' : '2px solid transparent',
+                paddingBottom: '4px',
+                cursor: 'pointer'
+              }}
             >
               {item.label}
             </button>
@@ -87,7 +101,7 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
             </button>
           </div>
 
-          <nav 
+          <nav
             className="p-8"
             style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
           >
@@ -95,10 +109,10 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
               <button
                 key={item.key}
                 onClick={() => handleNavClick(item.key)}
-                className={`text-left text-2xl font-medium capitalize transition-colors ${
+                className={`text-left text-3xl font-medium capitalize transition-colors ${
                   activePage === item.key
-                    ? 'text-black' 
-                    : 'text-gray-500 hover:text-black'
+                    ? 'text-black border-l-4 border-black pl-4'
+                    : 'text-gray-600 hover:text-black pl-4'
                 }`}
                 style={{ display: 'block', width: '100%' }}
               >
