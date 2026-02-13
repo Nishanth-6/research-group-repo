@@ -1,4 +1,6 @@
-// Utility functions to load data from JSON files
+// Utility functions to load data from Sanity CMS
+
+import { sanityClient } from '../lib/sanity';
 
 export interface Project {
   title: string;
@@ -57,118 +59,118 @@ export interface AboutSettings {
   vision?: string;
 }
 
-// Helper to get base path
-const getBase = () => {
-  const base = import.meta.env.BASE_URL || '/';
-  return base.endsWith('/') ? base : base + '/';
-};
+// ─── GROQ Queries ───
 
-// Load all projects
+const PROJECT_QUERY = `*[_type == "project"] | order(featured desc, title asc) {
+  title,
+  description,
+  image,
+  categories,
+  team,
+  featured,
+  status,
+  startDate,
+  endDate,
+  url
+}`;
+
+const TEAM_QUERY = `*[_type == "teamMemberDetail"] | order(sectionOrder asc, order asc) {
+  _id,
+  name,
+  "role": title,
+  bio,
+  "photo": image,
+  email,
+  "interests": researchAreas,
+  linkedin,
+  scholar,
+  website,
+  "category": section,
+  order
+}`;
+
+const PUBLICATION_QUERY = `*[_type == "publication"] | order(year desc, title asc) {
+  _id,
+  title,
+  authors,
+  year,
+  venue,
+  abstract,
+  type,
+  status,
+  links
+}`;
+
+const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0] {
+  siteTitle,
+  siteDescription,
+  heroTitle,
+  heroSubtitle,
+  contactEmail,
+  contactPhone,
+  address
+}`;
+
+const ABOUT_SETTINGS_QUERY = `*[_type == "aboutSettings"][0] {
+  title,
+  content,
+  mission,
+  vision
+}`;
+
+// ─── Loaders ───
+
 export async function loadProjects(): Promise<Project[]> {
-  return await loadProjectsFromFiles();
-}
-
-async function loadProjectsFromFiles(): Promise<Project[]> {
-  const projectFiles = [
-    'smart-grid-optimization',
-    'resilient-infrastructure',
-    'solar-deployment',
-    'urban-energy-dashboard',
-    'climate-adaptive-infrastructure',
-    'sustainable-building-systems'
-  ];
-
-  const projects: Project[] = [];
-  const base = getBase();
-
-  for (const file of projectFiles) {
-    try {
-      const response = await fetch(`${base}data/projects/${file}.json`);
-      if (response.ok) {
-        const project = await response.json();
-        projects.push(project);
-      }
-    } catch (error) {
-      console.error(`Error loading project ${file}:`, error);
-    }
+  try {
+    const data = await sanityClient.fetch<Project[]>(PROJECT_QUERY);
+    return data ?? [];
+  } catch (error) {
+    console.error('Error loading projects from Sanity:', error);
+    return [];
   }
-
-  return projects;
 }
 
-// Load all team members
 export async function loadTeamMembers(): Promise<TeamMember[]> {
-  return await loadTeamFromFiles();
-}
-
-async function loadTeamFromFiles(): Promise<TeamMember[]> {
-  const teamFiles = [
-    'faculty-1',
-    'researcher-1',
-    'phd-student-1'
-  ];
-
-  const team: TeamMember[] = [];
-  const base = getBase();
-
-  for (const file of teamFiles) {
-    try {
-      const response = await fetch(`${base}data/team/${file}.json`);
-      if (response.ok) {
-        const member = await response.json();
-        team.push(member);
-      }
-    } catch (error) {
-      console.error(`Error loading team member ${file}:`, error);
-    }
+  try {
+    const data = await sanityClient.fetch<TeamMember[]>(TEAM_QUERY);
+    return data ?? [];
+  } catch (error) {
+    console.error('Error loading team members from Sanity:', error);
+    return [];
   }
-
-  return team;
 }
 
-// Load all publications
 export async function loadPublications(): Promise<Publication[]> {
-  return await loadPublicationsFromFiles();
-}
-
-async function loadPublicationsFromFiles(): Promise<Publication[]> {
-  const pubFiles = [
-    '2024-paper-1',
-    '2023-conf-paper-1'
-  ];
-
-  const publications: Publication[] = [];
-  const base = getBase();
-
-  for (const file of pubFiles) {
-    try {
-      const response = await fetch(`${base}data/publications/${file}.json`);
-      if (response.ok) {
-        const pub = await response.json();
-        publications.push(pub);
-      }
-    } catch (error) {
-      console.error(`Error loading publication ${file}:`, error);
-    }
+  try {
+    const data = await sanityClient.fetch<Publication[]>(PUBLICATION_QUERY);
+    return data ?? [];
+  } catch (error) {
+    console.error('Error loading publications from Sanity:', error);
+    return [];
   }
-
-  return publications.sort((a, b) => b.year - a.year);
 }
 
-// Load site settings
 export async function loadSiteSettings(): Promise<SiteSettings> {
   try {
-    const base = getBase();
-    const response = await fetch(`${base}data/settings/general.json`);
-    if (!response.ok) {
-      return getDefaultSettings();
-    }
-    return await response.json();
+    const data = await sanityClient.fetch<SiteSettings | null>(SITE_SETTINGS_QUERY);
+    return data ?? getDefaultSettings();
   } catch (error) {
-    console.error('Error loading site settings:', error);
+    console.error('Error loading site settings from Sanity:', error);
     return getDefaultSettings();
   }
 }
+
+export async function loadAboutSettings(): Promise<AboutSettings> {
+  try {
+    const data = await sanityClient.fetch<AboutSettings | null>(ABOUT_SETTINGS_QUERY);
+    return data ?? getDefaultAboutSettings();
+  } catch (error) {
+    console.error('Error loading about settings from Sanity:', error);
+    return getDefaultAboutSettings();
+  }
+}
+
+// ─── Defaults (fallback if Sanity is empty or unreachable) ───
 
 function getDefaultSettings(): SiteSettings {
   return {
@@ -176,29 +178,14 @@ function getDefaultSettings(): SiteSettings {
     siteDescription: 'Research Team Website',
     heroTitle: 'Research Projects',
     heroSubtitle: 'We develop intelligent systems and decision-support tools.',
-    contactEmail: 'contact@research-team.edu'
+    contactEmail: 'contact@research-team.edu',
   };
-}
-
-// Load about settings
-export async function loadAboutSettings(): Promise<AboutSettings> {
-  try {
-    const base = getBase();
-    const response = await fetch(`${base}data/settings/about.json`);
-    if (!response.ok) {
-      return getDefaultAboutSettings();
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error loading about settings:', error);
-    return getDefaultAboutSettings();
-  }
 }
 
 function getDefaultAboutSettings(): AboutSettings {
   return {
     title: 'About Us',
     content: 'About our research team.',
-    mission: 'Our mission is to advance research.'
+    mission: 'Our mission is to advance research.',
   };
 }

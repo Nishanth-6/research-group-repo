@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Target, Users, Lightbulb, Award } from 'lucide-react';
+import { Target, Users, Lightbulb, Award, ArrowRight } from 'lucide-react';
 import { ProjectCard } from './ProjectCard';
 import { FilterBar } from './FilterBar';
 import { loadProjects, type Project } from '../utils/dataLoader';
+import { TransparentLogo } from './TransparentLogo';
 
 interface ProjectWithId extends Project {
   id: number;
@@ -17,8 +18,8 @@ const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode, del
       ref={ref}
       style={{
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+        transition: `opacity 0.3s ease-out ${delay * 0.5}s, transform 0.3s ease-out ${delay * 0.5}s`,
       }}
     >
       {children}
@@ -26,7 +27,11 @@ const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode, del
   );
 };
 
-export function About() {
+interface AboutProps {
+  onResearchAreaClick?: (researchArea: string) => void;
+}
+
+export function About({ onResearchAreaClick }: AboutProps) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [projects, setProjects] = useState<ProjectWithId[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,24 +82,28 @@ export function About() {
   const researchAreas = [
     {
       title: 'Self-Adapting Approximations',
+      slug: 'self-adapting-approximations',
       description:
         'Solving large-scale Markov decision processes using algorithms that automate learning from data, underlying problem structure, and instance difficulty — improving accessibility for non-technical domain experts and resource-constrained organizations.',
       image: '/images/focus-1.jpg',
     },
     {
       title: 'Energy Real Options',
+      slug: 'energy-real-options',
       description:
         'Operations, valuation, and risk management of commodity and energy conversion assets including production, storage, and transport — with a focus on renewable energy integration and trading strategies.',
       image: '/images/focus-2.jpg',
     },
     {
       title: 'Energy & Computing Nexus',
+      slug: 'energy-computing-nexus',
       description:
         'Exploring how energy demands intensified by computing growth (e.g., data centers) can be met, and how computing advances (e.g., LLMs) can accelerate the sustainable energy transformation.',
       image: '/images/focus-3.jpg',
     },
     {
       title: 'Large-Scale Optimization',
+      slug: 'large-scale-optimization',
       description:
         'Designing efficient first-order methods and preconditioning techniques for convex optimization in machine learning, fairness-constrained systems, and sequential decision-making under uncertainty.',
       image: '/images/focus-4.jpg',
@@ -194,7 +203,7 @@ export function About() {
           }}
         />
 
-        {/* Content */}
+        {/* Content — two-column: text left, logo right */}
         <div
           style={{
             position: 'relative',
@@ -203,67 +212,96 @@ export function About() {
             width: '100%',
             margin: '0 auto',
             padding: '100px 48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '48px',
           }}
         >
-          <h1
+          {/* Left — text */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h1
+              style={{
+                fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                fontWeight: 700,
+                color: '#fff',
+                letterSpacing: '-0.02em',
+                lineHeight: 1.1,
+                margin: '0 0 24px 0',
+                maxWidth: '750px',
+              }}
+            >
+              <span style={{ color: '#93c5fd' }}>I</span>nfrastructure and{' '}
+              <span style={{ color: '#60a5fa' }}>D</span>ecision{' '}
+              <span style={{ color: '#60a5fa' }}>I</span>ntelligence for{' '}
+              <span style={{ color: '#4caf50' }}>A</span>ccelerating{' '}
+              <span style={{ color: '#4caf50' }}>T</span>echnology and{' '}
+              <span style={{ color: '#4caf50' }}>E</span>nergy{' '}
+              <span style={{ color: '#4caf50' }}>R</span>esilience
+            </h1>
+            <p
+              style={{
+                fontSize: '1.15rem',
+                color: 'rgba(255,255,255,0.65)',
+                lineHeight: 1.7,
+                maxWidth: '560px',
+                margin: 0,
+              }}
+            >
+              We develop intelligent systems and dynamic decision-making models to
+              accelerate the transition to resilient, sustainable infrastructure
+              and energy systems.
+            </p>
+            <a
+              href="#research-projects"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('research-projects')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              style={{
+                display: 'inline-block',
+                marginTop: '32px',
+                padding: '14px 32px',
+                backgroundColor: '#fff',
+                color: '#0a0e1a',
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                textDecoration: 'none',
+                letterSpacing: '0.02em',
+                transition: 'background-color 0.2s, transform 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#e5e7eb';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#fff';
+              }}
+            >
+              Explore Our Research →
+            </a>
+          </div>
+
+          {/* Right — large logo (transparent, no white bg) */}
+          <div
             style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-              fontWeight: 700,
-              color: '#fff',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.1,
-              margin: '0 0 24px 0',
-              maxWidth: '750px',
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginLeft: 'auto', // Force move right
             }}
           >
-            <span style={{ color: '#93c5fd' }}>I</span>nfrastructure and{' '}
-            <span style={{ color: '#60a5fa' }}>D</span>ecision{' '}
-            <span style={{ color: '#60a5fa' }}>I</span>ntelligence for{' '}
-            <span style={{ color: '#4caf50' }}>A</span>ccelerating{' '}
-            <span style={{ color: '#4caf50' }}>T</span>echnology and{' '}
-            <span style={{ color: '#4caf50' }}>E</span>nergy{' '}
-            <span style={{ color: '#4caf50' }}>R</span>esilience
-          </h1>
-          <p
-            style={{
-              fontSize: '1.15rem',
-              color: 'rgba(255,255,255,0.65)',
-              lineHeight: 1.7,
-              maxWidth: '560px',
-              margin: 0,
-            }}
-          >
-            We develop intelligent systems and dynamic decision-making models to
-            accelerate the transition to resilient, sustainable infrastructure
-            and energy systems.
-          </p>
-          <a
-            href="#research-projects"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('research-projects')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            style={{
-              display: 'inline-block',
-              marginTop: '32px',
-              padding: '14px 32px',
-              backgroundColor: '#fff',
-              color: '#0a0e1a',
-              fontSize: '0.9rem',
-              fontWeight: 600,
-              textDecoration: 'none',
-              letterSpacing: '0.02em',
-              transition: 'background-color 0.2s, transform 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#e5e7eb';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#fff';
-            }}
-          >
-            Explore Our Research →
-          </a>
+            <TransparentLogo
+              src="/images/logo.png"
+              alt="IDIATER Logo"
+              style={{
+                width: '360px',
+                height: '360px',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 0 50px rgba(96, 165, 250, 0.2))',
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -441,6 +479,7 @@ export function About() {
             {researchAreas.map((area, i) => (
               <div
                 key={i}
+                onClick={() => onResearchAreaClick?.(area.slug)}
                 style={{
                   position: 'relative',
                   borderRadius: '16px',
@@ -449,10 +488,10 @@ export function About() {
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'flex-end',
-                  cursor: 'default',
+                  cursor: 'pointer',
                   transition: 'transform 0.3s, box-shadow 0.3s',
                   boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-                  filter: (i === 1 || i === 3) ? 'brightness(1.15) contrast(1.1)' : 'none', // Brighten Energy Real Options (1) & Large-Scale Optimization (3)
+                  filter: (i === 1 || i === 3) ? 'brightness(1.15) contrast(1.1)' : 'none',
                 }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)';
@@ -508,13 +547,26 @@ export function About() {
                       fontSize: '0.95rem',
                       lineHeight: 1.6,
                       color: 'rgba(255,255,255,0.9)',
-                      margin: 0,
+                      margin: '0 0 16px 0',
                       textShadow: '0 1px 2px rgba(0,0,0,0.3)',
                     }}
                   >
                     {area.description}
-            </p>
-          </div>
+                  </p>
+                  <span
+                    style={{
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      color: 'rgba(255,255,255,0.7)',
+                      letterSpacing: '0.04em',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    View Publications <span style={{ fontSize: '1rem' }}>→</span>
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -565,7 +617,7 @@ export function About() {
                 {filteredProjects.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
-              </div>
+          </div>
             )}
           </div>
         </div>
@@ -601,7 +653,7 @@ export function About() {
             Our research is supported by leading funding agencies and conducted in
             partnership with academic institutions, industry leaders, and
             government organizations.
-          </p>
+        </p>
           <div
             style={{
               display: 'grid',

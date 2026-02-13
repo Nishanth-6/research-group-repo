@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Logo } from './Logo';
 
-type Page = 'about' | 'team' | 'publications' | 'contact';
+type Page = 'about' | 'research' | 'team' | 'publications' | 'contact';
 
 type HeaderProps = {
   activePage: Page;
@@ -11,6 +10,7 @@ type HeaderProps = {
 
 const navItems: { key: Page; label: string }[] = [
   { key: 'about', label: 'About' },
+  { key: 'research', label: 'Research' },
   { key: 'team', label: 'Team' },
   { key: 'publications', label: 'Publications' },
   { key: 'contact', label: 'Contact' },
@@ -35,22 +35,20 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
   return (
     <header className="border-b border-gray-200 bg-white sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-
-        {/* LOGO + WORDMARK */}
+        
+        {/* WORDMARK only */}
         <div
           className="flex items-center cursor-pointer"
           onClick={() => onPageChange('about')}
-          style={{ gap: '18px' }}
         >
-          <Logo />
           <img
             src="/images/idiater-wordmark-new.png"
             alt="IDIATER"
             style={{
-              height: '70px',
+              height: '42px',
               width: 'auto',
               display: 'block',
-              borderRadius: '10px'
+              borderRadius: '6px'
             }}
           />
         </div>
@@ -61,7 +59,7 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
           style={{ gap: '40px' }}
         >
           {navItems.map((item) => (
-            <button
+            <button 
               key={item.key}
               onClick={() => onPageChange(item.key)}
               className="text-lg font-semibold transition-colors capitalize"
@@ -101,7 +99,7 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
             </button>
           </div>
 
-          <nav
+          <nav 
             className="p-8"
             style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
           >

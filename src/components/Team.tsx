@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Mail, Linkedin, GraduationCap, Globe, ArrowLeft } from 'lucide-react';
+import { sanityClient } from '../lib/sanity';
 
 /* ─── Data Model ─── */
 
@@ -21,147 +22,25 @@ interface TeamMember {
   awards?: string[];
 }
 
-/* ─── All Team Data ─── */
+/* ─── GROQ Query ─── */
 
-const allMembers: TeamMember[] = [
-  {
-    id: 'selva-nadarajah',
-    name: 'Selva Nadarajah',
-    title: 'Director & Associate Professor',
-    section: 'Director',
-    initials: 'SN',
-    image: '/images/team/selva-nadarajah.jpg',
-    email: 'selvan@uic.edu',
-    website: 'https://www.selva-nadarajah.com',
-    linkedin: '#',
-    scholar: '#',
-    bio: 'Selva Nadarajah is an Associate Professor (with tenure) of Information and Decision Sciences and Bielinski Family Endowed Scholar at the College of Business Administration, University of Illinois at Chicago. Selva also works with Argonne National Laboratory and previously served as the Decision Intelligence R&D Lead at the Discovery Partners Institute (Innovation hub of the University of Illinois System).',
-    idiaterRole: 'As Director of IDIATER, Selva leads the group\'s research vision — driving work on self-adapting approximations for large-scale Markov decision processes, energy real options for commodity and energy conversion assets, and the energy-computing nexus exploring how energy demands intensified by computing growth (e.g., data centers) can be met and how advances like LLMs can accelerate the sustainable energy transformation.',
-    researchAreas: [
-      'Self-Adapting Approximations for large-scale MDPs',
-      'Energy Real Options — operations, valuation, and risk management of energy assets',
-      'Energy & Computing Nexus — data centers, LLMs, and sustainable transformation',
-    ],
-    education: [
-      'PhD & MS in Operations Research — Tepper School of Business, Carnegie Mellon University',
-      'MASc in Operations Research — University of Waterloo',
-      'B.Tech — Indian Institute of Technology Madras',
-    ],
-    awards: [
-      '2024 UIC Global Scholar',
-      '2024 INFORMS Harvey J. Greenberg Research Award',
-      '2021 CEMA Best Paper Award',
-      '2020 INFORMS ENRE Young Researcher Prize',
-      'Best Overall Paper — 2020 NeurIPS Workshop on Tackling Climate Change with ML',
-      '2014 William L. Cooper Dissertation Award',
-      '2013 Egon Balas Best Paper Award',
-    ],
-  },
-  {
-    id: 'negar-soheili',
-      name: 'Negar Soheili',
-      title: 'Associate Professor',
-    section: 'Faculty',
-    initials: 'NS',
-    image: '/images/team/negar-soheili.png',
-      email: 'nazad@uic.edu',
-    website: 'https://www.negar-soheili.com',
-      linkedin: '#',
-      scholar: '#',
-    bio: 'Negar Soheili is an Associate Professor of Business Analytics in the Information and Decision Sciences Department at the College of Business, University of Illinois at Chicago. Negar earned her PhD in Operations Research from the Tepper School of Business at Carnegie Mellon University in 2014 and co-founded the PhD program in Information and Decision Sciences at UIC while serving as Director of Graduate Studies.',
-    idiaterRole: 'Within IDIATER, Negar drives the optimization engine — developing scalable first-order methods that power the group\'s large-scale sequential decision-making research. Her work on preconditioning techniques and feasibility-guaranteed algorithms is foundational to IDIATER\'s ability to tackle real-world infrastructure problems at scale.',
-    researchAreas: [
-      'Problem Geometry & Algorithm Acceleration — preconditioning and rescaling techniques',
-      'Constrained Optimization with Feasibility Guarantees — fairness-constrained ML',
-      'Large-Scale Sequential Decision Making — first-order methods for MDPs',
-    ],
-    education: [
-      'PhD in Operations Research — Tepper School of Business, Carnegie Mellon University (2014)',
-    ],
-  },
-  {
-    id: 'beryl-chen',
-      name: 'Beryl Chen',
-      title: 'Faculty',
-    section: 'Faculty',
-    initials: 'BC',
-      email: '[email@institution.edu]',
-      linkedin: '#',
-      scholar: '#',
-    bio: '[Bio description highlighting research expertise and academic background]',
-    idiaterRole: '[Description of role and contributions within IDIATER — research focus, collaboration areas, and impact on the group\'s mission]',
-    researchAreas: ['[Research area 1]', '[Research area 2]'],
-    },
-    {
-    id: 'ludwig-dierks',
-      name: 'Ludwig Dierks',
-      title: 'Faculty',
-    section: 'Faculty',
-    initials: 'LD',
-      email: '[email@institution.edu]',
-      linkedin: '#',
-      scholar: '#',
-    bio: '[Bio description highlighting research expertise and academic background]',
-    idiaterRole: '[Description of role and contributions within IDIATER — research focus, collaboration areas, and impact on the group\'s mission]',
-    researchAreas: ['[Research area 1]', '[Research area 2]'],
-  },
-  {
-    id: 'lisa-bonnett',
-    name: 'Lisa Bonnett',
-    title: 'Policy Advisor',
-    section: 'Policy Advisor',
-    initials: 'LB',
-    email: '[email@institution.edu]',
-    linkedin: '#',
-    scholar: '#',
-    bio: '[Bio description highlighting policy expertise and professional background]',
-    idiaterRole: '[Description of advisory role within IDIATER — bridging research outputs to real-world policy, stakeholder engagement, and strategic guidance]',
-  },
-  {
-    id: 'arman-aminipanah',
-      name: 'Arman Aminipanah',
-      title: 'PhD Student',
-    section: 'PhD Students',
-    initials: 'AA',
-      email: '[email@institution.edu]',
-    bio: '[Academic background and research interests]',
-    idiaterRole: '[Current PhD research within IDIATER — topic, methods, and expected contributions]',
-    researchAreas: ['[Research focus area]'],
-    },
-    {
-    id: 'mahtab-danaei',
-      name: 'Mahtab Danaei',
-      title: 'PhD Student',
-    section: 'PhD Students',
-    initials: 'MD',
-      email: '[email@institution.edu]',
-    bio: '[Academic background and research interests]',
-    idiaterRole: '[Current PhD research within IDIATER — topic, methods, and expected contributions]',
-    researchAreas: ['[Research focus area]'],
-    },
-    {
-    id: 'satender-gunwal',
-      name: 'Satender Gunwal',
-      title: 'PhD Student',
-    section: 'PhD Students',
-    initials: 'SG',
-      email: '[email@institution.edu]',
-    bio: '[Academic background and research interests]',
-    idiaterRole: '[Current PhD research within IDIATER — topic, methods, and expected contributions]',
-    researchAreas: ['[Research focus area]'],
-  },
-  {
-    id: 'hrishitaa',
-      name: 'Hrishitaa',
-      title: 'Masters Student',
-    section: 'Masters Students',
-    initials: 'H',
-      email: '[email@institution.edu]',
-    bio: '[Academic background and research interests]',
-    idiaterRole: '[Current research within IDIATER — project focus and contributions]',
-    researchAreas: ['[Research focus area]'],
-  },
-];
+const TEAM_QUERY = `*[_type == "teamMemberDetail"] | order(sectionOrder asc, order asc) {
+  "id": slug.current,
+  name,
+  title,
+  section,
+  initials,
+  image,
+  email,
+  website,
+  linkedin,
+  scholar,
+  bio,
+  idiaterRole,
+  researchAreas,
+  education,
+  awards
+}`;
 
 /* ─── Sections in display order ─── */
 const sections = ['Director', 'Faculty', 'Policy Advisor', 'PhD Students', 'Masters Students'];
@@ -170,7 +49,7 @@ const sections = ['Director', 'Faculty', 'Policy Advisor', 'PhD Students', 'Mast
    TEAM LIST VIEW — compact: photo + name + title
    ──────────────────────────────────────────────── */
 
-function TeamList({ onSelect }: { onSelect: (id: string) => void }) {
+function TeamList({ members, onSelect }: { members: TeamMember[]; onSelect: (id: string) => void }) {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
       {/* Hero */}
@@ -198,14 +77,14 @@ function TeamList({ onSelect }: { onSelect: (id: string) => void }) {
       {/* Member list */}
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 40px 80px' }}>
         {sections.map((section) => {
-          const members = allMembers.filter((m) => m.section === section);
-          if (members.length === 0) return null;
+          const sectionMembers = members.filter((m) => m.section === section);
+          if (sectionMembers.length === 0) return null;
           return (
             <section key={section} style={{ marginTop: '56px' }}>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#111827', margin: '0 0 0 0', paddingBottom: '12px', borderBottom: '2px solid #111827' }}>
                 {section}
               </h2>
-              {members.map((m) => (
+              {sectionMembers.map((m) => (
                 <div
                   key={m.id}
                   onClick={() => onSelect(m.id)}
@@ -229,10 +108,10 @@ function TeamList({ onSelect }: { onSelect: (id: string) => void }) {
                     if (cta) cta.style.opacity = '0.6';
                   }}
                 >
-                  {/* Small photo / initials */}
+                  {/* Photo / initials */}
                   <div style={{
-                    width: '56px',
-                    height: '56px',
+                    width: '80px',
+                    height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
                     backgroundColor: '#f3f4f6',
@@ -246,11 +125,11 @@ function TeamList({ onSelect }: { onSelect: (id: string) => void }) {
                         onError={(e) => {
                           (e.currentTarget as HTMLImageElement).style.display = 'none';
                           const p = e.currentTarget.parentElement;
-                          if (p) p.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:1rem;font-weight:600;">${m.initials}</div>`;
+                          if (p) p.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:1.25rem;font-weight:600;">${m.initials}</div>`;
                         }}
                       />
                     ) : (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', fontSize: '1rem', fontWeight: 600 }}>
+                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', fontSize: '1.25rem', fontWeight: 600 }}>
                         {m.initials}
                       </div>
                     )}
@@ -432,6 +311,29 @@ function MemberDetail({ member, onBack }: { member: TeamMember; onBack: () => vo
 
 export function Team() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [allMembers, setAllMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    sanityClient
+      .fetch<TeamMember[]>(TEAM_QUERY)
+      .then((data) => {
+        setAllMembers(data ?? []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error loading team from Sanity:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
+        <p style={{ color: '#9ca3af' }}>Loading team…</p>
+      </div>
+    );
+  }
 
   const selectedMember = selectedId ? allMembers.find((m) => m.id === selectedId) : null;
 
@@ -447,5 +349,5 @@ export function Team() {
     );
   }
 
-  return <TeamList onSelect={(id) => { setSelectedId(id); window.scrollTo({ top: 0 }); }} />;
+  return <TeamList members={allMembers} onSelect={(id) => { setSelectedId(id); window.scrollTo({ top: 0 }); }} />;
 }

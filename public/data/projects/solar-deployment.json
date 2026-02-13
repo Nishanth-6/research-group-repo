@@ -1,9 +1,0 @@
-{
-  "title": "Solar Deployment Accelerator",
-  "description": "Computational tools for optimizing solar panel placement and predicting energy output in urban environments.",
-  "image": "https://images.unsplash.com/photo-1628206554160-63e8c921e398?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZW5ld2FibGUlMjBlbmVyZ3klMjBzb2xhcnxlbnwxfHx8fDE3NjUzMTg2MDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-  "categories": ["energy", "sustainability", "ai"],
-  "team": ["Dr. Selva Nadarajah", "Satender Gunwal"],
-  "featured": false,
-  "status": "active"
-}

@@ -6,8 +6,8 @@ export function Logo() {
       src="/images/logo.png"
       alt="IDIATER Logo"
       style={{
-        width: '100px',
-        height: '100px',
+        width: '130px',
+        height: '130px',
         objectFit: 'contain',
         flexShrink: 0,
         backgroundColor: 'transparent',
