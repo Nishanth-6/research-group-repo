@@ -42,14 +42,12 @@ const TEAM_QUERY = `*[_type == "teamMemberDetail"] | order(sectionOrder asc, ord
   awards
 }`;
 
-/* ─── Sections in display order ─── */
-const sections = ['Director', 'Faculty', 'Policy Advisor', 'PhD Students', 'Masters Students'];
-
 /* ────────────────────────────────────────────────
-   TEAM LIST VIEW — compact: photo + name + title
+   TEAM GRID VIEW — circular photos, name + role
+   Brain Resilience Lab style
    ──────────────────────────────────────────────── */
 
-function TeamList({ members, onSelect }: { members: TeamMember[]; onSelect: (id: string) => void }) {
+function TeamGrid({ members, onSelect }: { members: TeamMember[]; onSelect: (id: string) => void }) {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
       {/* Hero */}
@@ -61,10 +59,6 @@ function TeamList({ members, onSelect }: { members: TeamMember[]; onSelect: (id:
       }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/images/hero-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center 40%', opacity: 0.4 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(100deg, rgba(8,12,28,0.85) 0%, rgba(8,12,28,0.55) 45%, rgba(8,12,28,0.2) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(96,165,250,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(96,165,250,0.22) 1px, transparent 1px)', backgroundSize: '48px 48px', maskImage: 'radial-gradient(ellipse 100% 100% at 65% 50%, black 20%, transparent 75%)', WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 65% 50%, black 20%, transparent 75%)' }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '16px 16px', maskImage: 'radial-gradient(ellipse 80% 70% at 70% 50%, black 15%, transparent 65%)', WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 70% 50%, black 15%, transparent 65%)' }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(135deg, transparent, transparent 96px, rgba(96,165,250,0.1) 97px, transparent 98px)', maskImage: 'radial-gradient(ellipse 90% 80% at 60% 50%, black 20%, transparent 70%)', WebkitMaskImage: 'radial-gradient(ellipse 90% 80% at 60% 50%, black 20%, transparent 70%)' }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle 3px at 20% 25%, rgba(96,165,250,0.5) 0%, transparent 100%), radial-gradient(circle 3px at 55% 12%, rgba(76,175,80,0.45) 0%, transparent 100%), radial-gradient(circle 4px at 78% 30%, rgba(96,165,250,0.55) 0%, transparent 100%), radial-gradient(circle 3px at 65% 65%, rgba(76,175,80,0.4) 0%, transparent 100%), radial-gradient(circle 3px at 88% 50%, rgba(96,165,250,0.45) 0%, transparent 100%), radial-gradient(circle 4px at 82% 82%, rgba(76,175,80,0.5) 0%, transparent 100%), radial-gradient(circle 3px at 50% 40%, rgba(96,165,250,0.4) 0%, transparent 100%), radial-gradient(circle 4px at 72% 18%, rgba(96,165,250,0.5) 0%, transparent 100%)' }} />
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px', margin: '0 auto', padding: '80px 40px' }}>
           <h1 style={{ fontSize: '3.5rem', fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 16px 0' }}>Our Team</h1>
@@ -74,96 +68,106 @@ function TeamList({ members, onSelect }: { members: TeamMember[]; onSelect: (id:
         </div>
       </div>
 
-      {/* Member list */}
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 40px 80px' }}>
-        {sections.map((section) => {
-          const sectionMembers = members.filter((m) => m.section === section);
-          if (sectionMembers.length === 0) return null;
-          return (
-            <section key={section} style={{ marginTop: '56px' }}>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#111827', margin: '0 0 0 0', paddingBottom: '12px', borderBottom: '2px solid #111827' }}>
-                {section}
-              </h2>
-              {sectionMembers.map((m) => (
-                <div
-                  key={m.id}
-                  onClick={() => onSelect(m.id)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '20px',
-                    padding: '20px 0',
-                    borderBottom: '1px solid #f3f4f6',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.15s',
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.backgroundColor = '#fafafa';
-                    const cta = e.currentTarget.querySelector('.view-profile-cta') as HTMLElement | null;
-                    if (cta) cta.style.opacity = '1';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.backgroundColor = 'transparent';
-                    const cta = e.currentTarget.querySelector('.view-profile-cta') as HTMLElement | null;
-                    if (cta) cta.style.opacity = '0.6';
-                  }}
-                >
-                  {/* Photo / initials */}
-                  <div style={{
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '50%',
-                    overflow: 'hidden',
-                    backgroundColor: '#f3f4f6',
-                    flexShrink: 0,
-                  }}>
-                    {m.image ? (
-                      <img
-                        src={m.image}
-                        alt={m.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).style.display = 'none';
-                          const p = e.currentTarget.parentElement;
-                          if (p) p.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:1.25rem;font-weight:600;">${m.initials}</div>`;
-                        }}
-                      />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', fontSize: '1.25rem', fontWeight: 600 }}>
-                        {m.initials}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Name + title */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600, color: '#111827' }}>{m.name}</p>
-                    <p style={{ margin: '2px 0 0', fontSize: '0.85rem', color: '#6b7280' }}>{m.title}</p>
-                  </div>
-
-                  {/* View Profile CTA */}
-                  <span
-                    className="view-profile-cta"
-                    style={{
-                      fontSize: '0.8rem',
-                      fontWeight: 500,
-                      color: '#1e3a5f',
-                      whiteSpace: 'nowrap' as const,
-                      flexShrink: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      opacity: 0.6,
-                      transition: 'opacity 0.15s',
+      {/* Grid of members */}
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '64px 40px 80px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+            gap: '48px 32px',
+            justifyItems: 'center',
+          }}
+        >
+          {members.map((m) => (
+            <div
+              key={m.id}
+              onClick={() => onSelect(m.id)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                cursor: 'pointer',
+                maxWidth: '220px',
+              }}
+            >
+              {/* Circular photo */}
+              <div
+                style={{
+                  width: '180px',
+                  height: '180px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  backgroundColor: '#f3f4f6',
+                  marginBottom: '16px',
+                  border: '3px solid #e8ecf2',
+                  transition: 'border-color 0.2s, transform 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor = '#93c5fd';
+                  (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.03)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor = '#e8ecf2';
+                  (e.currentTarget as HTMLDivElement).style.transform = 'scale(1)';
+                }}
+              >
+                {m.image ? (
+                  <img
+                    src={m.image}
+                    alt={m.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', display: 'block' }}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      const p = e.currentTarget.parentElement;
+                      if (p) p.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:2.5rem;font-weight:600;background:#f3f4f6;">${m.initials}</div>`;
                     }}
-                  >
-                    View Profile <span style={{ fontSize: '1rem' }}>→</span>
-                  </span>
-                </div>
-              ))}
-            </section>
-          );
-        })}
+                  />
+                ) : (
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', fontSize: '2.5rem', fontWeight: 600 }}>
+                    {m.initials}
+                  </div>
+                )}
+              </div>
+
+              {/* Name */}
+              <p style={{
+                margin: '0 0 4px 0',
+                fontSize: '1.05rem',
+                fontWeight: 700,
+                color: '#1a2332',
+                lineHeight: 1.3,
+              }}>
+                {m.name}
+              </p>
+
+              {/* Role / Title */}
+              <p style={{
+                margin: '0 0 8px 0',
+                fontSize: '0.88rem',
+                color: '#6b7280',
+                lineHeight: 1.4,
+              }}>
+                {m.title}
+              </p>
+
+              {/* Read More link */}
+              <span
+                style={{
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  color: '#2563eb',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  transition: 'color 0.15s',
+                }}
+              >
+                Read More →
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -349,5 +353,5 @@ export function Team() {
     );
   }
 
-  return <TeamList members={allMembers} onSelect={(id) => { setSelectedId(id); window.scrollTo({ top: 0 }); }} />;
+  return <TeamGrid members={allMembers} onSelect={(id) => { setSelectedId(id); window.scrollTo({ top: 0 }); }} />;
 }

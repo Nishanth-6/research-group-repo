@@ -12,12 +12,13 @@ interface Project {
 
 interface ProjectCardProps {
   project: Project;
+  onClick?: () => void;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, onClick }: ProjectCardProps) {
   return (
-    <div className="group cursor-pointer">
-      <div className="relative overflow-hidden bg-gray-100 aspect-[4/3] mb-4">
+    <div className="group cursor-pointer" onClick={onClick}>
+      <div className="relative overflow-hidden bg-gray-100 aspect-[4/3] mb-4" style={{ borderRadius: '12px' }}>
         <ImageWithFallback
           src={project.image}
           alt={project.title}

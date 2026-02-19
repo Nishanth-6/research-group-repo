@@ -27,11 +27,21 @@ const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode, del
   );
 };
 
-interface AboutProps {
-  onResearchAreaClick?: (researchArea: string) => void;
+interface ProjectForDetail {
+  title: string;
+  description: string;
+  image: string;
+  categories: string[];
+  team: string[];
 }
 
-export function About({ onResearchAreaClick }: AboutProps) {
+interface AboutProps {
+  onResearchAreaClick?: (researchArea: string) => void;
+  onProjectClick?: (project: ProjectForDetail) => void;
+  onResearchPageClick?: () => void;
+}
+
+export function About({ onResearchAreaClick, onProjectClick, onResearchPageClick }: AboutProps) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [projects, setProjects] = useState<ProjectWithId[]>([]);
   const [loading, setLoading] = useState(true);
@@ -110,195 +120,145 @@ export function About({ onResearchAreaClick }: AboutProps) {
     },
   ];
 
-  const partners = [
-    'Argonne National Laboratory',
-    'Discovery Partners Institute',
-    'INFORMS',
-    '[Research Institute]',
-    '[Academic Initiative]',
-    '[Industry Partner]',
-  ];
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
-      {/* ===== HERO with background image + mesh overlay ===== */}
+      {/* ===== HERO — clean split layout (no brain pattern) ===== */}
       <div
         style={{
           position: 'relative',
           overflow: 'hidden',
-          minHeight: '540px',
+          minHeight: '620px',
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#0a0e1a',
+          backgroundColor: '#050a18',
         }}
       >
-        {/* Background image */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'url(/images/hero-bg.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center 40%',
-            opacity: 0.45,
-          }}
-        />
-
-        {/* Dark gradient overlay — heavier on the left for text readability */}
+        {/* Base gradient background */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(100deg, rgba(8,12,28,0.92) 0%, rgba(8,12,28,0.7) 45%, rgba(8,12,28,0.3) 100%)',
+              'linear-gradient(115deg, #060b1f 0%, #08122c 45%, #0b1a3a 100%)',
           }}
         />
 
-        {/* Mesh / network grid — fades away from the text area */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `
-              linear-gradient(rgba(96,165,250,0.12) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(96,165,250,0.12) 1px, transparent 1px)
-            `,
-            backgroundSize: '48px 48px',
-            maskImage:
-              'radial-gradient(ellipse 90% 80% at 75% 50%, black 10%, transparent 65%)',
-            WebkitMaskImage:
-              'radial-gradient(ellipse 90% 80% at 75% 50%, black 10%, transparent 65%)',
-          }}
-        />
-
-        {/* Diagonal accent lines */}
+        {/* Subtle technical texture */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             backgroundImage:
-              'repeating-linear-gradient(135deg, transparent, transparent 96px, rgba(96,165,250,0.06) 97px, transparent 98px)',
-            maskImage:
-              'radial-gradient(ellipse 80% 70% at 65% 50%, black 15%, transparent 60%)',
-            WebkitMaskImage:
-              'radial-gradient(ellipse 80% 70% at 65% 50%, black 15%, transparent 60%)',
+              'linear-gradient(rgba(96,165,250,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(96,165,250,0.08) 1px, transparent 1px)',
+            backgroundSize: '52px 52px',
+            opacity: 0.35,
           }}
         />
 
-        {/* Glowing node dots */}
+        {/* Soft light glows */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: `
-              radial-gradient(circle 2px at 25% 20%, rgba(96,165,250,0.35) 0%, transparent 100%),
-              radial-gradient(circle 2px at 60% 15%, rgba(76,175,80,0.3) 0%, transparent 100%),
-              radial-gradient(circle 3px at 80% 35%, rgba(96,165,250,0.4) 0%, transparent 100%),
-              radial-gradient(circle 2px at 70% 70%, rgba(76,175,80,0.25) 0%, transparent 100%),
-              radial-gradient(circle 2px at 90% 55%, rgba(96,165,250,0.3) 0%, transparent 100%),
-              radial-gradient(circle 2px at 45% 80%, rgba(96,165,250,0.2) 0%, transparent 100%),
-              radial-gradient(circle 3px at 85% 85%, rgba(76,175,80,0.35) 0%, transparent 100%),
-              radial-gradient(circle 2px at 55% 45%, rgba(96,165,250,0.25) 0%, transparent 100%)
-            `,
+            background:
+              'radial-gradient(circle at 18% 35%, rgba(59,130,246,0.25), transparent 38%), radial-gradient(circle at 82% 65%, rgba(34,197,94,0.18), transparent 40%)',
           }}
         />
 
-        {/* Content — two-column: text left, logo right */}
+        {/* Content */}
         <div
+          className="hero-grid"
           style={{
             position: 'relative',
-            zIndex: 1,
-            maxWidth: '1100px',
+            zIndex: 2,
+            maxWidth: '1200px',
             width: '100%',
             margin: '0 auto',
-            padding: '100px 48px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            padding: '96px 48px',
+            display: 'grid',
+            gridTemplateColumns: '1.2fr 0.8fr',
             gap: '48px',
+            alignItems: 'center',
           }}
         >
-          {/* Left — text */}
-          <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Left: text */}
+          <div>
             <h1
               style={{
-                fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                fontSize: 'clamp(2.2rem, 5vw, 4rem)',
                 fontWeight: 700,
-                color: '#fff',
-                letterSpacing: '-0.02em',
-                lineHeight: 1.1,
+                color: '#ffffff',
+                lineHeight: 1.15,
                 margin: '0 0 24px 0',
-                maxWidth: '750px',
+                letterSpacing: '-0.02em',
               }}
             >
-              <span style={{ color: '#93c5fd' }}>I</span>nfrastructure and{' '}
-              <span style={{ color: '#60a5fa' }}>D</span>ecision{' '}
-              <span style={{ color: '#60a5fa' }}>I</span>ntelligence for{' '}
-              <span style={{ color: '#4caf50' }}>A</span>ccelerating{' '}
-              <span style={{ color: '#4caf50' }}>T</span>echnology and{' '}
-              <span style={{ color: '#4caf50' }}>E</span>nergy{' '}
-              <span style={{ color: '#4caf50' }}>R</span>esilience
+              Infrastructure and Decision Intelligence for Accelerating
+              Technology and Energy Resilience
             </h1>
+
             <p
               style={{
-                fontSize: '1.15rem',
-                color: 'rgba(255,255,255,0.65)',
-                lineHeight: 1.7,
-                maxWidth: '560px',
-                margin: 0,
+                fontSize: '1.1rem',
+                color: 'rgba(255,255,255,0.75)',
+                lineHeight: 1.75,
+                maxWidth: '620px',
+                margin: '0 0 34px 0',
               }}
             >
               We develop intelligent systems and dynamic decision-making models to
               accelerate the transition to resilient, sustainable infrastructure
               and energy systems.
             </p>
+
             <a
-              href="#research-projects"
+              href="#"
               onClick={(e) => {
                 e.preventDefault();
-                document.getElementById('research-projects')?.scrollIntoView({ behavior: 'smooth' });
+                onResearchPageClick?.();
               }}
               style={{
                 display: 'inline-block',
-                marginTop: '32px',
-                padding: '14px 32px',
-                backgroundColor: '#fff',
-                color: '#0a0e1a',
-                fontSize: '0.9rem',
-                fontWeight: 600,
+                padding: '14px 34px',
+                backgroundColor: '#ffffff',
+                color: '#0b132b',
+                fontSize: '0.92rem',
+                fontWeight: 700,
                 textDecoration: 'none',
                 letterSpacing: '0.02em',
-                transition: 'background-color 0.2s, transform 0.2s',
+                border: '1px solid #ffffff',
+                transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#e5e7eb';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#fff';
+                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#ffffff';
               }}
             >
               Explore Our Research →
             </a>
           </div>
 
-          {/* Right — large logo (transparent, no white bg) */}
+          {/* Right: existing logo — dark bg removed via canvas */}
           <div
+            className="hero-logo-col"
             style={{
-              flexShrink: 0,
               display: 'flex',
+              justifyContent: 'flex-end',
               alignItems: 'center',
-              justifyContent: 'center',
-              marginLeft: 'auto', // Force move right
             }}
           >
             <TransparentLogo
-              src="/images/logo.png"
-              alt="IDIATER Logo"
+              src="/images/hero-infinity.png"
+              alt="IDIATER Symbol"
+              removeBackground="dark"
               style={{
-                width: '360px',
-                height: '360px',
+                width: '520px',
+                height: '520px',
                 objectFit: 'contain',
-                filter: 'drop-shadow(0 0 50px rgba(96, 165, 250, 0.2))',
+                filter: 'drop-shadow(0 0 50px rgba(96, 165, 250, 0.3))',
               }}
             />
           </div>
@@ -358,6 +318,7 @@ export function About({ onResearchAreaClick }: AboutProps) {
 
       {/* ===== HIGHLIGHTS GRID ===== */}
       <div
+        className="section-padding"
         style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -365,6 +326,7 @@ export function About({ onResearchAreaClick }: AboutProps) {
         }}
       >
         <div
+          className="mobile-carousel"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -409,7 +371,7 @@ export function About({ onResearchAreaClick }: AboutProps) {
               >
                 <item.icon size={24} strokeWidth={2} />
               </div>
-              
+
               <h3
                 style={{
                   fontSize: '1.1rem',
@@ -439,6 +401,7 @@ export function About({ onResearchAreaClick }: AboutProps) {
       {/* ===== RESEARCH FOCUS AREAS — Photorealistic Cards ===== */}
       <FadeInSection delay={0.2}>
         <div
+          className="section-padding"
           style={{
             maxWidth: '1100px',
             margin: '0 auto',
@@ -470,6 +433,7 @@ export function About({ onResearchAreaClick }: AboutProps) {
             </h2>
           </div>
           <div
+            className="research-areas-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
@@ -579,7 +543,7 @@ export function About({ onResearchAreaClick }: AboutProps) {
           style={{
             maxWidth: '1100px',
             margin: '0 auto',
-            padding: '80px 48px 0',
+            padding: '80px 48px 80px',
           }}
         >
           <h2
@@ -615,7 +579,11 @@ export function About({ onResearchAreaClick }: AboutProps) {
                 }}
               >
                 {filteredProjects.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    onClick={() => onProjectClick?.(project)}
+                  />
                 ))}
           </div>
             )}
@@ -623,128 +591,6 @@ export function About({ onResearchAreaClick }: AboutProps) {
         </div>
       </FadeInSection>
 
-      {/* ===== COLLABORATIONS ===== */}
-      <FadeInSection delay={0.6}>
-        <div
-          style={{
-            maxWidth: '1000px',
-            margin: '0 auto',
-            padding: '80px 48px 0',
-          }}
-        >
-          <h2
-            style={{
-              fontSize: '2rem',
-              fontWeight: 700,
-              color: '#111827',
-              marginBottom: '16px',
-            }}
-          >
-            Collaborations &amp; Partnerships
-          </h2>
-          <p
-            style={{
-              fontSize: '1rem',
-              lineHeight: 1.7,
-              color: '#6b7280',
-              marginBottom: '28px',
-            }}
-          >
-            Our research is supported by leading funding agencies and conducted in
-            partnership with academic institutions, industry leaders, and
-            government organizations.
-        </p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-              gap: '16px',
-            }}
-          >
-          {partners.map((partner) => (
-              <div
-                key={partner}
-                style={{
-                  border: '1px solid #e5e7eb',
-                  padding: '16px',
-                  textAlign: 'center',
-                  fontSize: '0.875rem',
-                  color: '#4b5563',
-                }}
-              >
-              {partner}
-            </div>
-          ))}
-        </div>
-        </div>
-      </FadeInSection>
-
-      {/* ===== CTA ===== */}
-      <FadeInSection delay={0.8}>
-        <div
-          style={{
-            maxWidth: '1000px',
-            margin: '0 auto',
-            padding: '80px 48px 80px',
-          }}
-        >
-          <div
-            style={{
-              textAlign: 'center',
-              borderTop: '1px solid #e5e7eb',
-              paddingTop: '60px',
-            }}
-          >
-            <h3
-              style={{
-                fontSize: '1.75rem',
-                fontWeight: 700,
-                color: '#111827',
-                marginBottom: '12px',
-              }}
-            >
-              Interested in Joining Us?
-            </h3>
-            <p
-              style={{
-                fontSize: '1rem',
-                color: '#6b7280',
-                maxWidth: '550px',
-                margin: '0 auto 28px',
-                lineHeight: 1.6,
-              }}
-            >
-              We're always looking for talented PhD students, postdocs, and
-              collaborators who share our passion for solving complex
-              infrastructure challenges through computational methods.
-          </p>
-          <a 
-            href="#" 
-              onClick={(e) => e.preventDefault()}
-              style={{
-                display: 'inline-block',
-                padding: '14px 32px',
-                backgroundColor: '#111827',
-                color: '#fff',
-                fontSize: '0.95rem',
-                fontWeight: 500,
-                textDecoration: 'none',
-                transition: 'background-color 0.2s',
-              }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                  '#374151')
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                  '#111827')
-              }
-          >
-            View Open Positions
-          </a>
-        </div>
-      </div>
-      </FadeInSection>
     </div>
   );
 }

@@ -5,9 +5,11 @@ interface TransparentLogoProps {
   alt: string;
   className?: string;
   style?: React.CSSProperties;
+  /** 'light' removes white/near-white pixels, 'dark' removes black/near-black pixels */
+  removeBackground?: 'light' | 'dark';
 }
 
-export function TransparentLogo({ src, alt, className, style }: TransparentLogoProps) {
+export function TransparentLogo({ src, alt, className, style, removeBackground = 'light' }: TransparentLogoProps) {
   const [imageSrc, setImageSrc] = useState<string>('');
 
   useEffect(() => {
@@ -36,22 +38,37 @@ export function TransparentLogo({ src, alt, className, style }: TransparentLogoP
         const x = pixelIndex % width;
         const y = Math.floor(pixelIndex / width);
 
-        // Edge cleanup: Force outer 10px pixels to be transparent to remove border artifacts
-        if (x < 10 || x > width - 10 || y < 10 || y > height - 10) {
-           data[i + 3] = 0;
-           continue;
+        // Edge cleanup: Force outer margin pixels to be transparent
+        const margin = removeBackground === 'dark' ? 5 : 10;
+        if (x < margin || x > width - margin || y < margin || y > height - margin) {
+          data[i + 3] = 0;
+          continue;
         }
 
-        // White removal: lowered threshold to 220 to catch more off-white
-        if (r > 220 && g > 220 && b > 220) {
-          data[i + 3] = 0; 
+        if (removeBackground === 'light') {
+          // White removal
+          if (r > 220 && g > 220 && b > 220) {
+            data[i + 3] = 0;
+          }
+        } else {
+          // Dark removal: remove black/near-black pixels
+          // Use luminance for better accuracy
+          const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+          if (luminance < 40) {
+            // Pure dark → fully transparent
+            data[i + 3] = 0;
+          } else if (luminance < 70) {
+            // Near-dark → fade out gradually for smoother edges
+            const alpha = Math.round(((luminance - 40) / 30) * 255);
+            data[i + 3] = Math.min(data[i + 3], alpha);
+          }
         }
       }
 
       ctx.putImageData(imageData, 0, 0);
       setImageSrc(canvas.toDataURL());
     };
-  }, [src]);
+  }, [src, removeBackground]);
 
   if (!imageSrc) return null;
 

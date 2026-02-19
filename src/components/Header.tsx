@@ -86,33 +86,62 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
 
       {/* MOBILE FULL SCREEN MENU */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 bg-white animate-slide-down overflow-y-auto"
           style={{ top: 0, left: 0, width: '100vw', height: '100vh' }}
         >
-          <div className="flex items-center justify-end px-6 py-6 border-b border-gray-100">
-            <button 
+          {/* Top bar: wordmark + close */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px 24px',
+              borderBottom: '1px solid #f3f4f6',
+            }}
+          >
+            <span style={{ fontSize: '1.15rem', fontWeight: 700, color: '#111827', letterSpacing: '0.06em' }}>
+              IDIATER
+            </span>
+            <button
               onClick={() => setIsOpen(false)}
-              className="p-2 -mr-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '6px',
+                color: '#6b7280',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
-              <X className="w-8 h-8" />
+              <X size={22} />
             </button>
           </div>
 
-          <nav 
-            className="p-8"
-            style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
-          >
+          {/* Nav list */}
+          <nav style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '0' }}>
             {navItems.map((item) => (
               <button
                 key={item.key}
                 onClick={() => handleNavClick(item.key)}
-                className={`text-left text-3xl font-medium capitalize transition-colors ${
-                  activePage === item.key
-                    ? 'text-black border-l-4 border-black pl-4'
-                    : 'text-gray-600 hover:text-black pl-4'
-                }`}
-                style={{ display: 'block', width: '100%' }}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '16px 0',
+                  fontSize: '1.05rem',
+                  fontWeight: activePage === item.key ? 700 : 500,
+                  color: activePage === item.key ? '#111827' : '#6b7280',
+                  background: activePage === item.key ? '#f8fafc' : 'none',
+                  borderRadius: activePage === item.key ? '8px' : '0',
+                  paddingLeft: activePage === item.key ? '16px' : '0',
+                  border: 'none',
+                  cursor: 'pointer',
+                  borderBottom: activePage === item.key ? 'none' : '1px solid #f3f4f6',
+                  transition: 'all 0.15s ease',
+                }}
               >
                 {item.label}
               </button>

@@ -14,9 +14,9 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
   ];
 
   return (
-    <div className="border-b border-gray-200 bg-white sticky top-0 z-10">
+    <div className="border-b border-gray-200 bg-white sticky top-0 z-10 filter-bar-sticky" style={{ marginBottom: '8px' }}>
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex gap-4 overflow-x-auto">
+        <div className="flex gap-4 overflow-x-auto" style={{ paddingBottom: '8px' }}>
           {filters.map((filter) => (
             <button
               key={filter.id}

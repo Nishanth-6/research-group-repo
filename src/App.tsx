@@ -3,31 +3,31 @@ import { Header } from './components/Header';
 import { Publications } from './components/Publications';
 import { Team } from './components/Team';
 import { About } from './components/About';
+import { Research } from './components/Research';
 import { Contact } from './components/Contact';
+import { ProjectDetail } from './components/ProjectDetail';
+import { Footer } from './components/Footer';
 
-type Page = 'about' | 'research' | 'team' | 'publications' | 'contact';
+type Page = 'about' | 'research' | 'team' | 'publications' | 'contact' | 'project-detail';
+
+interface ProjectForDetail {
+  title: string;
+  description: string;
+  image: string;
+  categories: string[];
+  team: string[];
+}
 
 function App() {
   const [activePage, setActivePage] = useState<Page>('about');
   const [publicationsFilter, setPublicationsFilter] = useState<string | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectForDetail | null>(null);
+  const [projectDetailOrigin, setProjectDetailOrigin] = useState<'about' | 'research'>('about');
 
   const handlePageChange = (page: Page) => {
     if (page !== 'publications') {
       setPublicationsFilter(null);
     }
-
-    // "Research" tab → go to About page, then scroll to research-projects anchor
-    if (page === 'research') {
-      setActivePage('about');
-      // Use requestAnimationFrame so the About component renders first
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          document.getElementById('research-projects')?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      });
-      return;
-    }
-
     setActivePage(page);
     window.scrollTo({ top: 0 });
   };
@@ -38,16 +38,58 @@ function App() {
     window.scrollTo({ top: 0 });
   };
 
+  const handleProjectClick = (project: ProjectForDetail, origin: 'about' | 'research' = 'about') => {
+    setSelectedProject(project);
+    setProjectDetailOrigin(origin);
+    setActivePage('project-detail');
+    window.scrollTo({ top: 0 });
+  };
+
+  const handleProjectDetailBack = () => {
+    setActivePage('research');
+    window.scrollTo({ top: 0 });
+  };
+
+  // Determine which page to highlight as active in the header
+  const headerActivePage: Page =
+    activePage === 'project-detail'
+      ? projectDetailOrigin === 'research'
+        ? 'research'
+        : 'about'
+      : activePage;
+
   return (
     <div className="min-h-screen bg-white">
-      <Header activePage={activePage} onPageChange={handlePageChange} />
+      <Header activePage={headerActivePage} onPageChange={handlePageChange} />
 
-      {activePage === 'about' && <About onResearchAreaClick={handleResearchAreaClick} />}
+      {activePage === 'about' && (
+        <About
+          onResearchAreaClick={handleResearchAreaClick}
+          onProjectClick={(project) => handleProjectClick(project, 'about')}
+          onResearchPageClick={() => handlePageChange('research')}
+        />
+      )}
+      {activePage === 'research' && (
+        <Research
+          onProjectClick={(project) => handleProjectClick(project, 'research')}
+        />
+      )}
       {activePage === 'team' && <Team />}
       {activePage === 'publications' && (
         <Publications initialFilter={publicationsFilter} />
       )}
       {activePage === 'contact' && <Contact />}
+      {activePage === 'project-detail' && selectedProject && (
+        <ProjectDetail
+          project={selectedProject}
+          onBack={handleProjectDetailBack}
+        />
+      )}
+
+      <Footer
+        onPageChange={(page) => handlePageChange(page as Page)}
+        onResearchAreaClick={handleResearchAreaClick}
+      />
     </div>
   );
 }
