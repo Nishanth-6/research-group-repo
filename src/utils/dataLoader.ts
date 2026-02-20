@@ -13,6 +13,10 @@ export interface Project {
   startDate?: string;
   endDate?: string;
   url?: string;
+  overview?: string;
+  approach?: string;
+  impact?: string;
+  relatedResearchArea?: string;
 }
 
 export interface TeamMember {
@@ -71,7 +75,11 @@ const PROJECT_QUERY = `*[_type == "project"] | order(featured desc, title asc) {
   status,
   startDate,
   endDate,
-  url
+  url,
+  overview,
+  approach,
+  impact,
+  relatedResearchArea
 }`;
 
 const TEAM_QUERY = `*[_type == "teamMemberDetail"] | order(sectionOrder asc, order asc) {

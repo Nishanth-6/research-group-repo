@@ -50,22 +50,47 @@ export function Research({ onProjectClick }: ResearchProps) {
           padding: '72px 48px 60px',
         }}
       >
-        {/* Background image */}
+        {/* Base gradient */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'url(/images/projects/resilient-infra.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center 35%',
-            opacity: 0.25,
+            background: 'linear-gradient(115deg, #040b1f 0%, #0a1a3f 55%, #142852 100%)',
           }}
         />
+
+        {/* Structured project-network pattern (research pathways + nodes) */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(115deg, #050a18 0%, rgba(8,18,44,0.95) 50%, rgba(11,26,58,0.9) 100%)',
+            backgroundImage: `
+              linear-gradient(rgba(147,197,253,0.09) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(147,197,253,0.09) 1px, transparent 1px),
+              linear-gradient(28deg, rgba(96,165,250,0.18) 0%, transparent 38%),
+              linear-gradient(-32deg, rgba(56,189,248,0.14) 0%, transparent 34%)
+            `,
+            backgroundSize: '56px 56px, 56px 56px, 100% 100%, 100% 100%',
+            opacity: 0.45,
+          }}
+        />
+
+        {/* Subtle node clusters to suggest connected research tracks */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'radial-gradient(circle at 18% 32%, rgba(125,211,252,0.28) 0%, rgba(125,211,252,0.04) 12%, transparent 22%), radial-gradient(circle at 48% 66%, rgba(96,165,250,0.22) 0%, rgba(96,165,250,0.03) 10%, transparent 20%), radial-gradient(circle at 78% 30%, rgba(52,211,153,0.2) 0%, rgba(52,211,153,0.03) 10%, transparent 22%), radial-gradient(circle at 88% 76%, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.03) 10%, transparent 20%)',
+          }}
+        />
+
+        {/* Final readability layer */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(115deg, rgba(4,10,28,0.78) 0%, rgba(6,14,34,0.64) 50%, rgba(6,14,34,0.75) 100%)',
           }}
         />
 

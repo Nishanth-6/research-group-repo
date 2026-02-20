@@ -86,6 +86,33 @@ export const project = defineType({
       title: 'Project URL',
       type: 'url',
     }),
+    defineField({
+      name: 'overview',
+      title: 'Overview',
+      type: 'text',
+      rows: 6,
+      description: 'Detailed project overview section',
+    }),
+    defineField({
+      name: 'approach',
+      title: 'Approach',
+      type: 'text',
+      rows: 6,
+      description: 'Technical approach and methodology section',
+    }),
+    defineField({
+      name: 'impact',
+      title: 'Impact',
+      type: 'text',
+      rows: 6,
+      description: 'Project impact and results section',
+    }),
+    defineField({
+      name: 'relatedResearchArea',
+      title: 'Related Research Area',
+      type: 'string',
+      description: 'Research area tag for linking related publications',
+    }),
   ],
   preview: {
     select: { title: 'title', subtitle: 'status' },

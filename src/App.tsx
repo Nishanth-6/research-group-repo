@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { VisualEditing } from '@sanity/visual-editing/react';
 import { Header } from './components/Header';
 import { Publications } from './components/Publications';
 import { Team } from './components/Team';
@@ -7,6 +8,7 @@ import { Research } from './components/Research';
 import { Contact } from './components/Contact';
 import { ProjectDetail } from './components/ProjectDetail';
 import { Footer } from './components/Footer';
+import { isStudioPreview } from './lib/sanity';
 
 type Page = 'about' | 'research' | 'team' | 'publications' | 'contact' | 'project-detail';
 
@@ -90,6 +92,9 @@ function App() {
         onPageChange={(page) => handlePageChange(page as Page)}
         onResearchAreaClick={handleResearchAreaClick}
       />
+
+      {/* Sanity Visual Editing — only activates inside Presentation Tool */}
+      {isStudioPreview && <VisualEditing />}
     </div>
   );
 }
