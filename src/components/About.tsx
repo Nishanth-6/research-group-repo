@@ -4,6 +4,7 @@ import { ProjectCard } from './ProjectCard';
 import { FilterBar } from './FilterBar';
 import { loadProjects, type Project } from '../utils/dataLoader';
 import { TransparentLogo } from './TransparentLogo';
+import { clean } from '../lib/sanity';
 
 interface ProjectWithId extends Project {
   id: number;
@@ -60,7 +61,9 @@ export function About({ onResearchAreaClick, onProjectClick, onResearchPageClick
   const filteredProjects =
     activeFilter === 'all'
       ? projects
-      : projects.filter((project) => project.categories.includes(activeFilter));
+      : projects.filter((project) =>
+          clean(project.categories).includes(activeFilter)
+        );
 
   const highlights = [
     {

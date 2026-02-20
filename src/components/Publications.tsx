@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { sanityClient } from '../lib/sanity';
+import { sanityClient, clean } from '../lib/sanity';
 
 /* ─── Data Model ─── */
 
@@ -70,9 +70,9 @@ export function Publications({ initialFilter = null }: PublicationsProps) {
       });
   }, []);
 
-  // Filter by research area
+  // Filter by research area (clean stega encoding before comparing)
   const filtered = activeArea
-    ? publications.filter((p) => p.researchArea === activeArea)
+    ? publications.filter((p) => clean(p.researchArea) === activeArea)
     : publications;
 
   // Group by year

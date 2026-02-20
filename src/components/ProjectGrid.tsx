@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ProjectCard } from './ProjectCard';
 import { loadProjects, type Project } from '../utils/dataLoader';
+import { clean } from '../lib/sanity';
 
 interface ProjectGridProps {
   activeFilter: string;
@@ -27,7 +28,7 @@ export function ProjectGrid({ activeFilter }: ProjectGridProps) {
 
   const filteredProjects = activeFilter === 'all'
     ? projects
-    : projects.filter(project => project.categories.includes(activeFilter));
+    : projects.filter(project => clean(project.categories).includes(activeFilter));
 
   if (loading) {
     return (

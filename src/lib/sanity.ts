@@ -1,4 +1,5 @@
 import { createClient } from '@sanity/client';
+import { stegaClean } from '@sanity/client/stega';
 
 const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || 'lyz6if75';
 const dataset = import.meta.env.VITE_SANITY_DATASET || 'production';
@@ -21,4 +22,13 @@ export const sanityClient = createClient({
   },
 });
 
-export { isStudioPreview };
+export { isStudioPreview, stegaClean };
+
+/**
+ * Clean a string value from stega encoding before comparisons.
+ * Stega embeds invisible characters that break === / .includes() / .filter().
+ * Use this whenever comparing CMS-returned strings against known values.
+ */
+export function clean<T>(value: T): T {
+  return stegaClean(value);
+}

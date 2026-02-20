@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ProjectCard } from './ProjectCard';
 import { FilterBar } from './FilterBar';
 import { loadProjects, type Project } from '../utils/dataLoader';
+import { clean } from '../lib/sanity';
 
 interface ProjectWithId extends Project {
   id: number;
@@ -38,7 +39,9 @@ export function Research({ onProjectClick }: ResearchProps) {
   const filteredProjects =
     activeFilter === 'all'
       ? projects
-      : projects.filter((project) => project.categories.includes(activeFilter));
+      : projects.filter((project) =>
+          clean(project.categories).includes(activeFilter)
+        );
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
